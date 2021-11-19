@@ -3,8 +3,6 @@ import { Navbar } from "react-bulma-components";
 import Link from "next/link";
 import LogoutTimer from "components/logoutTimer";
 import LogoutReminderModal from "components/logoutReminderModal";
-import { useQuery } from "@apollo/react-hooks";
-import socNameQuery from "apollo/queries/socSetting/socName.gql";
 import { DateTime } from "luxon";
 import useClipped from "utils/useClipped";
 
@@ -20,7 +18,7 @@ const AdminLayout: React.FunctionComponent<Props> = ({ children }: Props) => {
     DateTime.local().plus({ minutes: 30 })
   );
   const [openModal, setOpenModal] = useState(false);
-  const { data, loading, error } = useQuery(socNameQuery);
+  // const { data, loading, error } = useQuery(socNameQuery);
 
   const toggleActive = useCallback(() => {
     setActive(!isActive);
@@ -86,9 +84,10 @@ const AdminLayout: React.FunctionComponent<Props> = ({ children }: Props) => {
           <Navbar.Brand>
             <Link href="/admin">
               <a href="/admin" className="navbar-item">
-                {loading && <p>loading</p>}
+                {/* {loading && <p>loading</p>}
                 {error && <p>error</p>}
-                {data?.socName || <></>}
+                {data?.socName || <></>} */}
+                ???
               </a>
             </Link>
             <Navbar.Item renderAs="div">
@@ -104,54 +103,7 @@ const AdminLayout: React.FunctionComponent<Props> = ({ children }: Props) => {
             />
           </Navbar.Brand>
           <Navbar.Menu>
-            <Navbar.Container>
-              <Navbar.Item dropdown hoverable role="menu" tabIndex="0">
-                <Navbar.Link>Members</Navbar.Link>
-                <Navbar.Dropdown>
-                  <Link href="/admin/members/import">
-                    <a href="/admin/members/import" className="navbar-item">
-                      Import Members
-                    </a>
-                  </Link>
-                  <Link href="/admin/members">
-                    <a href="/admin/members" className="navbar-item">
-                      Member List
-                    </a>
-                  </Link>
-                  <Link href="/admin/members/registrations">
-                    <a href="/admin/registrations" className="navbar-item">
-                      Registration List
-                    </a>
-                  </Link>
-                </Navbar.Dropdown>
-              </Navbar.Item>
-
-              <Navbar.Item dropdown hoverable role="menu" tabIndex="0">
-                <Navbar.Link>Admins</Navbar.Link>
-                <Navbar.Dropdown>
-                  <Link href="/admin/admins">
-                    <a href="/admin/admins" className="navbar-item">
-                      Admin List
-                    </a>
-                  </Link>
-                  <Link href="/admin/admins/soc_settings">
-                    <a href="/admin/soc_settings" className="navbar-item">
-                      Change Settings
-                    </a>
-                  </Link>
-                  <Link href="/admin/admins/logs">
-                    <a href="/admin/logs" className="navbar-item">
-                      Check Logs
-                    </a>
-                  </Link>
-                  <Link href="/admin/admins/authentication">
-                    <a href="/admin/authentication" className="navbar-item">
-                      Update Client Keys
-                    </a>
-                  </Link>
-                </Navbar.Dropdown>
-              </Navbar.Item>
-            </Navbar.Container>
+            <Navbar.Container></Navbar.Container>
             <Navbar.Container position="end">
               <Link href="/logout">
                 <a href="/logout" className="navbar-item">

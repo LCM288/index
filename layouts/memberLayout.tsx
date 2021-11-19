@@ -3,8 +3,6 @@ import { Navbar } from "react-bulma-components";
 import Link from "next/link";
 import LogoutTimer from "components/logoutTimer";
 import LogoutReminderModal from "components/logoutReminderModal";
-import { useQuery } from "@apollo/react-hooks";
-import socNameQuery from "apollo/queries/socSetting/socName.gql";
 import { DateTime } from "luxon";
 import useClipped from "utils/useClipped";
 
@@ -20,7 +18,7 @@ const MemberLayout: React.FunctionComponent<Props> = ({ children }: Props) => {
     DateTime.local().plus({ minutes: 30 })
   );
   const [openModal, setOpenModal] = useState(false);
-  const { data, loading, error } = useQuery(socNameQuery);
+  // const { data, loading, error } = useQuery(socNameQuery);
 
   const toggleActive = useCallback(() => {
     setActive(!isActive);
@@ -86,9 +84,10 @@ const MemberLayout: React.FunctionComponent<Props> = ({ children }: Props) => {
           <Navbar.Brand>
             <Link href="/member">
               <a href="/member" className="navbar-item">
-                {loading && <p>loading</p>}
+                {/* {loading && <p>loading</p>}
                 {error && <p>error</p>}
-                {data?.socName || <></>}
+                {data?.socName || <></>} */}
+                ???
               </a>
             </Link>
             <Navbar.Item renderAs="div">
