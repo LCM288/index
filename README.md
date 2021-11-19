@@ -1,9 +1,9 @@
-[![License](https://badgen.net/github/license/LCM288/acsoc-index?cache=600)](https://github.com/LCM288/acsoc-index/blob/master/LICENSE)
-[![Commits](https://badgen.net/github/commits/LCM288/acsoc-index?cache=600)](https://github.com/LCM288/acsoc-index)
-[![Last Commit](https://badgen.net/github/last-commit/LCM288/acsoc-index?cache=600)](https://github.com/LCM288/acsoc-index)
-[![Build Status](https://badgen.net/travis/LCM288/acsoc-index?cache=600)](https://travis-ci.com/LCM288/acsoc-index)
-[![Open Issues](https://badgen.net/github/open-issues/LCM288/acsoc-index?cache=600)](https://github.com/LCM288/acsoc-index/issues)
-[![Open PRs](https://badgen.net/github/open-prs/LCM288/acsoc-index?cache=600)](https://github.com/LCM288/acsoc-index/pulls)
+[![License](https://badgen.net/github/license/LCM288/index?cache=600)](https://github.com/LCM288/index/blob/master/LICENSE)
+[![Commits](https://badgen.net/github/commits/LCM288/index?cache=600)](https://github.com/LCM288/index)
+[![Last Commit](https://badgen.net/github/last-commit/LCM288/index?cache=600)](https://github.com/LCM288/index)
+[![Build Status](https://badgen.net/travis/LCM288/index?cache=600)](https://travis-ci.com/LCM288/index)
+[![Open Issues](https://badgen.net/github/open-issues/LCM288/index?cache=600)](https://github.com/LCM288/index/issues)
+[![Open PRs](https://badgen.net/github/open-prs/LCM288/index?cache=600)](https://github.com/LCM288/index/pulls)
 
 ## Setup procedure
 
@@ -16,7 +16,7 @@
 
 ## Useful docs
 
-- [acsoc-index](https://lcm288.github.io/acsoc-index/)
+- [acsoc-index](https://lcm288.github.io/index/)
 - Database: [Sequelize](https://sequelize.org/master/index.html) / [Umzug](https://github.com/sequelize/umzug/tree/v2.x)
 - Backend: [Graphql](https://graphql.org/learn/) / [Apollo Server](https://www.apollographql.com/docs/apollo-server/)
 - Frontend: [Apollo Client](https://www.apollographql.com/docs/react/) / [Next](https://nextjs.org/docs/getting-started) / [React](https://reactjs.org/docs/getting-started.html) / [react-bulma-components](https://github.com/couds/react-bulma-components) / [Bulma](https://bulma.io/)
