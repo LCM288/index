@@ -1,5 +1,5 @@
 {
-  "mode": "modules",
+  "entryPoints": ["."],
   "exclude": ["node_modules/**", "docs/**", "**/*.js"],
   "out": "./docs"
 }

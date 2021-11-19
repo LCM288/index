@@ -1,5 +1,5 @@
-import * as apolloServerMicro from "apollo-server-micro";
-import { gql } from "apollo-server";
+import { ApolloServer } from "apollo-server-micro";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { IncomingMessage } from "http";
 import { getUser } from "utils/auth";
 
@@ -16,13 +16,6 @@ import {
 // datasources
 
 // others
-import {
-  sequelize,
-  personStore,
-  executiveStore,
-  socSettingStore,
-  logEntryStore,
-} from "@/store";
 import { ContextBase } from "./types/datasources";
 import { ResolverDatasource } from "./types/resolver";
 
@@ -32,8 +25,7 @@ import { ResolverDatasource } from "./types/resolver";
  * @internal
  */
 const dataSources = (): ResolverDatasource => {
-  return {
-  };
+  return {};
 };
 
 /**
@@ -53,30 +45,32 @@ const context = async ({
  * A base type def for graphql
  * @internal
  */
-const baseTypeDefs = gql`
-  type Mutation
-  type Query
-  ${DateTypeDefinition}
-  ${DateTimeTypeDefinition}
+const baseTypeDefs = `
+  type Mutation {
+    dummy: String
+  }
+  type Query {
+    dummy: String
+  }
 `;
 
 /**
  * A micro Apollo server that would resolve any graphql queries
  */
-const apolloServer = new apolloServerMicro.ApolloServer({
-  typeDefs: [
-    baseTypeDefs,
-  ],
-  resolvers: [
-    { Date: DateResolver, DateTime: DateTimeResolver },
-  ],
+const apolloServer = new ApolloServer({
+  typeDefs: [baseTypeDefs, DateTypeDefinition, DateTimeTypeDefinition],
+  resolvers: [{ Date: DateResolver, DateTime: DateTimeResolver }],
   dataSources,
   context,
-  playground: {
-    settings: {
-      "request.credentials": "same-origin",
-    },
-  },
+  plugins: [
+    ApolloServerPluginLandingPageGraphQLPlayground({
+      settings: {
+        "request.credentials": "same-origin",
+      },
+    }),
+  ],
 });
 
-export default apolloServer;
+export default new Promise<ApolloServer>((resolve) => {
+  apolloServer.start().then(() => resolve(apolloServer));
+});

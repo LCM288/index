@@ -1,10 +1,9 @@
-import { IResolvers } from "apollo-server";
+import { IResolvers } from "@graphql-tools/utils";
 import { DataSources } from "apollo-server-core/src/graphqlOptions";
 import { ContextBase } from "./datasources";
 
 /** The data source for a resolver */
-export interface ResolverDatasource extends DataSources<ContextBase> {
-}
+export type ResolverDatasource = DataSources<ContextBase>;
 
 /** The parent nodes of a resolver */
 export type ResolverParent = null;

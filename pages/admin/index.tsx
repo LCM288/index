@@ -1,20 +1,9 @@
-import React, { useMemo, useEffect } from "react";
-import { DateTime } from "luxon";
+import React from "react";
 import AdminLayout from "layouts/adminLayout";
-import { useQuery } from "@apollo/react-hooks";
-import { Heading } from "react-bulma-components";
-import {
-  PersonModelAttributes,
-  statusOf,
-  MemberStatusEnum,
-} from "@/utils/Person";
 import Link from "next/link";
 import Head from "next/head";
 import IndexWrapper from "components/indexWrapper";
 import { ServerSideProps } from "utils/getServerSideProps";
-import toast from "utils/toast";
-import personQuery from "apollo/queries/person/person.gql";
-import socSettingsQuery from "apollo/queries/socSetting/socSettings.gql";
 
 export { getAdminPageServerSideProps as getServerSideProps } from "utils/getServerSideProps";
 

@@ -7,26 +7,40 @@ export interface ServerSideProps {
   isAdmin: boolean;
 }
 
-export const getMemberPageServerSideProps: GetServerSideProps<ServerSideProps> = async (
-  ctx
-) => {
-  const user = await getUserAndRefreshToken(ctx);
-  if (!user) {
-    ctx.res.statusCode = 307;
-    ctx.res.setHeader("Location", "/");
-    return { props: { user: null, isAdmin: false } };
-  }
-  return {
-    props: { user, isAdmin: await isAdmin(user) }, // will be passed to the page component as props
+export const getMemberPageServerSideProps: GetServerSideProps<ServerSideProps> =
+  async (ctx) => {
+    const user = await getUserAndRefreshToken(ctx);
+    if (!user) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: "/",
+        },
+      };
+    }
+    return {
+      props: { user, isAdmin: await isAdmin(user) }, // will be passed to the page component as props
+    };
   };
-};
 
 export const getAdminPageServerSideProps: GetServerSideProps = async (ctx) => {
-  const { props } = await getMemberPageServerSideProps(ctx);
-  if (!props.isAdmin) {
-    ctx.res.statusCode = 307;
-    ctx.res.setHeader("Location", "/");
-    return { props: { user: null, isAdmin: false } };
+  const user = await getUserAndRefreshToken(ctx);
+  if (!user) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
   }
-  return { props };
+  const userIsAdmin = await isAdmin(user);
+  if (!userIsAdmin) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+    };
+  }
+  return { props: { user, isAdmin: true } };
 };
