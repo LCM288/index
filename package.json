@@ -108,7 +108,6 @@
     "typescript": "^4.5.2"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "eslint --cache --fix",
-    "**/*.ts?(x)": "tsc -p tsconfig.json --noEmit"
+    "*.{js,jsx,ts,tsx}": "eslint --cache --fix"
   }
 }
