@@ -1,5 +1,8 @@
 import { ApolloServer } from "apollo-server-micro";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import {
+  ApolloServerPluginLandingPageGraphQLPlayground,
+  ApolloServerPluginLandingPageDisabled,
+} from "apollo-server-core";
 import { IncomingMessage } from "http";
 import { getUser } from "utils/auth";
 
@@ -63,11 +66,13 @@ const apolloServer = new ApolloServer({
   dataSources,
   context,
   plugins: [
-    ApolloServerPluginLandingPageGraphQLPlayground({
-      settings: {
-        "request.credentials": "same-origin",
-      },
-    }),
+    process.env.NODE_ENV === "production"
+      ? ApolloServerPluginLandingPageDisabled()
+      : ApolloServerPluginLandingPageGraphQLPlayground({
+          settings: {
+            "request.credentials": "same-origin",
+          },
+        }),
   ],
 });
 
