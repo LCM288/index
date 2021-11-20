@@ -61,6 +61,7 @@ const baseTypeDefs = `
  * A micro Apollo server that would resolve any graphql queries
  */
 const apolloServer = new ApolloServer({
+  introspection: process.env.GRAPHQL_PLAYGROUND === "enabled",
   typeDefs: [baseTypeDefs, DateTypeDefinition, DateTimeTypeDefinition],
   resolvers: [{ Date: DateResolver, DateTime: DateTimeResolver }],
   dataSources,
