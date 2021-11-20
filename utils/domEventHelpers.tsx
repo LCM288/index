@@ -13,7 +13,6 @@ export const stopAndPrevent = (event: React.SyntheticEvent): void => {
   event.preventDefault();
 };
 
-/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 export const StopClickDiv = ({
   children,
 }: {

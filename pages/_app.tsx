@@ -18,10 +18,7 @@ const BulmaCloseBtn = ({
   closeToast,
 }: {
   closeToast: () => void;
-}): React.ReactElement => (
-  // eslint-disable-next-line jsx-a11y/control-has-associated-label, react/button-has-type
-  <button onClick={closeToast} className="delete" />
-);
+}): React.ReactElement => <button onClick={closeToast} className="delete" />;
 
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   uri: "/api/graphql",
@@ -36,9 +33,11 @@ export const ClipCountContext = React.createContext({
 
 function App({ Component, pageProps }: AppProps): React.ReactElement {
   const Layout =
-    ((Component as unknown) as {
-      Layout: React.ComponentType;
-    }).Layout ?? React.Fragment;
+    (
+      Component as unknown as {
+        Layout: React.ComponentType;
+      }
+    ).Layout ?? React.Fragment;
 
   const clipCount = useRef(0);
 
