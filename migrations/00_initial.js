@@ -82,7 +82,7 @@ async function up(queryInterface) {
           onDelete: "RESTRICT",
         },
         status: {
-          type: DataType.ENUM,
+          type: DataTypes.ENUM,
           values: [
             "on-load",
             "on-shelf",
