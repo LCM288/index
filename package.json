@@ -106,12 +106,6 @@
     "typedoc": "^0.21.0",
     "typescript": "^4.5.2"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "yarn lint"
-    }
-  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --fix",
     "**/*.ts?(x)": "tsc -p tsconfig.json --noEmit"
