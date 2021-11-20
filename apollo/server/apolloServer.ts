@@ -66,13 +66,13 @@ const apolloServer = new ApolloServer({
   dataSources,
   context,
   plugins: [
-    process.env.NODE_ENV === "production"
-      ? ApolloServerPluginLandingPageDisabled()
-      : ApolloServerPluginLandingPageGraphQLPlayground({
+    process.env.GRAPHQL_PLAYGROUND === "enabled"
+      ? ApolloServerPluginLandingPageGraphQLPlayground({
           settings: {
             "request.credentials": "same-origin",
           },
-        }),
+        })
+      : ApolloServerPluginLandingPageDisabled(),
   ],
 });
 
