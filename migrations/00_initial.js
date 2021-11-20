@@ -5,7 +5,7 @@ const { DataTypes } = require("sequelize");
 async function up(queryInterface) {
   await queryInterface.sequelize.transaction(async (transaction) => {
     await queryInterface.createTable(
-      "people",
+      "series",
       {
         id: {
           type: DataTypes.INTEGER,
@@ -13,65 +13,84 @@ async function up(queryInterface) {
           allowNull: false,
           primaryKey: true,
         },
-        sid: {
-          type: DataTypes.STRING(12),
-          allowNull: false,
-          unique: true,
-        },
-        chineseName: {
-          type: DataTypes.STRING(20),
-        },
-        englishName: {
+        title: {
           type: DataTypes.STRING,
           allowNull: false,
         },
-        gender: {
-          type: DataTypes.ENUM,
-          values: ["Male", "Female", "None"],
-        },
-        dateOfBirth: {
-          type: DataTypes.DATEONLY,
-        },
-        email: {
+        author: {
           type: DataTypes.STRING,
+          allowNull: false,
         },
-        phone: {
-          type: DataTypes.STRING(30),
+        location: {
+          type: DataTypes.STRING,
+          allowNull: false,
         },
-        college: {
-          type: DataTypes.ENUM,
+        language: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        createdAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+        updatedAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+      },
+      {
+        transaction,
+      }
+    );
+    await queryInterface.createTable(
+      "books",
+      {
+        id: {
+          type: DataTypes.INTEGER,
+          autoIncrement: true,
+          allowNull: false,
+          primaryKey: true,
+        },
+        volumn: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        isbn: {
+          type: DataTypes.STRING(13),
+          allowNull: false,
+        },
+        title: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        author: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        location: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        language: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
+        seriesId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: { model: "series", key: "id" },
+          onDelete: "RESTRICT",
+        },
+        status: {
+          type: DataType.ENUM,
           values: [
-            "CC",
-            "UC",
-            "NA",
-            "SC",
-            "MC",
-            "SHHO",
-            "CW",
-            "WYS",
-            "LWS",
-            "GS",
-            "None",
+            "on-load",
+            "on-shelf",
+            "hold",
+            "lost",
+            "archieved",
+            "deleted",
           ],
-          allowNull: false,
-        },
-        major: {
-          type: DataTypes.STRING(8),
-          allowNull: false,
-        },
-        dateOfEntry: {
-          type: DataTypes.DATEONLY,
-          allowNull: false,
-        },
-        expectedGraduationDate: {
-          type: DataTypes.DATEONLY,
-          allowNull: false,
-        },
-        memberSince: {
-          type: DataTypes.DATE,
-        },
-        memberUntil: {
-          type: DataTypes.DATEONLY,
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -87,7 +106,7 @@ async function up(queryInterface) {
       }
     );
     await queryInterface.createTable(
-      "executives",
+      "borrowings",
       {
         id: {
           type: DataTypes.INTEGER,
@@ -98,13 +117,29 @@ async function up(queryInterface) {
         sid: {
           type: DataTypes.STRING(12),
           allowNull: false,
-          unique: true,
         },
-        nickname: {
-          type: DataTypes.STRING(20),
+        bookId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: { model: "books", key: "id" },
+          onDelete: "RESTRICT",
         },
-        pos: {
-          type: DataTypes.STRING(20),
+        borrowedAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+        dueOn: {
+          type: DataTypes.DATEONLY,
+          allowNull: false,
+        },
+        returnedAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+        },
+        renewalCounts: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -120,7 +155,7 @@ async function up(queryInterface) {
       }
     );
     await queryInterface.createTable(
-      "soc_settings",
+      "miscSettings",
       {
         id: {
           type: DataTypes.INTEGER,
@@ -131,7 +166,6 @@ async function up(queryInterface) {
         key: {
           type: DataTypes.STRING,
           allowNull: false,
-          unique: true,
         },
         value: {
           type: DataTypes.STRING,
@@ -155,9 +189,10 @@ async function up(queryInterface) {
 
 async function down(queryInterface) {
   await queryInterface.sequelize.transaction(async (transaction) => {
-    await queryInterface.dropTable("soc_settings", { transaction });
-    await queryInterface.dropTable("executives", { transaction });
-    await queryInterface.dropTable("people", { transaction });
+    await queryInterface.dropTable("miscSettings", { transaction });
+    await queryInterface.dropTable("borrowings", { transaction });
+    await queryInterface.dropTable("books", { transaction });
+    await queryInterface.dropTable("series", { transaction });
   });
 }
 
