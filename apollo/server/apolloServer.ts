@@ -7,6 +7,7 @@ import { IncomingMessage } from "http";
 import { getUser } from "utils/auth";
 
 // models
+import { typeDefs as seriesTypeDefs } from "@/models/series";
 
 // resolvers
 import {
@@ -15,8 +16,14 @@ import {
   DateTimeResolver,
   DateTimeTypeDefinition,
 } from "graphql-scalars";
+import {
+  resolvers as seriesResolvers,
+  resolverTypeDefs as seriesResolverTypeDefs,
+} from "@/resolvers/series";
 
 // datasources
+import SeriesAPI from "./datasources/series";
+import { firestore } from "./store";
 
 // others
 import { ContextBase } from "./types/datasources";
@@ -28,7 +35,9 @@ import { ResolverDatasource } from "./types/resolver";
  * @internal
  */
 const dataSources = (): ResolverDatasource => {
-  return {};
+  return {
+    seriesAPI: new SeriesAPI(firestore.collection("series")),
+  };
 };
 
 /**
@@ -49,12 +58,8 @@ const context = async ({
  * @internal
  */
 const baseTypeDefs = `
-  type Mutation {
-    dummy: String
-  }
-  type Query {
-    dummy: String
-  }
+  type Mutation
+  type Query
 `;
 
 /**
@@ -62,8 +67,17 @@ const baseTypeDefs = `
  */
 const apolloServer = new ApolloServer({
   introspection: process.env.GRAPHQL_PLAYGROUND === "enabled",
-  typeDefs: [baseTypeDefs, DateTypeDefinition, DateTimeTypeDefinition],
-  resolvers: [{ Date: DateResolver, DateTime: DateTimeResolver }],
+  typeDefs: [
+    baseTypeDefs,
+    seriesTypeDefs,
+    seriesResolverTypeDefs,
+    DateTypeDefinition,
+    DateTimeTypeDefinition,
+  ],
+  resolvers: [
+    { Date: DateResolver, DateTime: DateTimeResolver },
+    seriesResolvers,
+  ],
   dataSources,
   context,
   plugins: [
