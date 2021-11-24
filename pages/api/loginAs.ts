@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getClientIp } from "request-ip";
-import { issureJwt, setJwtHeader } from "utils/auth";
+import axios from "axios";
+import qs from "qs";
 
 export default async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
-  if (process.env.NODE_ENV !== "development") {
+  if (process.env.LOGIN_AS !== "enabled") {
     res.status(404).end("404 Not Found");
     return;
   }
@@ -20,15 +20,28 @@ export default async (
     return;
   }
 
-  const addr = getClientIp(req);
-  const user = { sid, name, addr };
-  const token = await issureJwt(user);
-
-  if (!token) {
-    res.status(500).end("Cannot find issue jwt.");
-    return;
+  try {
+    const result = await axios.get(`${process.env.SOC_ADMIN_URL}/api/loginAs`, {
+      params: {
+        sid,
+        name,
+      },
+      paramsSerializer: (params) => {
+        return qs.stringify(params);
+      },
+    });
+    const setCookieHeader = result.headers["set-cookie"]?.[0];
+    if (!setCookieHeader) {
+      throw new Error(`Did not recieved jwt cookie`);
+    }
+    if (process.env.NODE_ENV === "development") {
+      res.setHeader("Set-Cookie", setCookieHeader.replace("__Host-", ""));
+    } else {
+      res.setHeader("Set-Cookie", setCookieHeader);
+    }
+    res.end("<script>window.location.href='/'</script>");
+  } catch (err) {
+    console.error(err);
+    res.status(500).end("Login Error.");
   }
-
-  setJwtHeader(token, res);
-  res.end("<script>window.location.href='/'</script>");
 };

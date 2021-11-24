@@ -4,7 +4,7 @@ import {
   ApolloServerPluginLandingPageDisabled,
 } from "apollo-server-core";
 import { IncomingMessage } from "http";
-import { getUser } from "utils/auth";
+import { getUserFromRequest } from "utils/auth";
 
 // models
 import { typeDefs as seriesTypeDefs } from "@/models/series";
@@ -49,7 +49,7 @@ const context = async ({
 }: {
   req: IncomingMessage;
 }): Promise<ContextBase> => {
-  const user = await getUser(req);
+  const user = await getUserFromRequest(req);
   return { user };
 };
 
