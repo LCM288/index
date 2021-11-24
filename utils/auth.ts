@@ -3,9 +3,9 @@ import { IncomingMessage, ServerResponse } from "http";
 import { parseCookies } from "nookies";
 import jwt from "jsonwebtoken";
 import { User } from "@/types/datasources";
+import axios from "axios";
 
-import { getClientIp } from "request-ip";
-
+// TODO
 /**
  * Check whether the user is an executive
  * @async
@@ -17,29 +17,6 @@ export const isAdmin = async (user: User | null): Promise<boolean> => {
     return false;
   }
   return false;
-};
-
-/**
- * Issue a jwt token for a user
- * @async
- * @param {User} user - The user object to be encrypted
- * @param {string} secret - The jwt secret
- * @returns {Promise<string | undefined>} the issued token
- */
-export const issureJwt = async (
-  user: User,
-  secret?: string
-): Promise<string | undefined> => {
-  const jwtSecret = secret ?? process.env.JWT_SECRET_KEY;
-  if (!jwtSecret) {
-    return undefined;
-  }
-  const token = jwt.sign(
-    { sid: user.sid, name: user.name, addr: user.addr },
-    jwtSecret,
-    { expiresIn: "30m" }
-  );
-  return token;
 };
 
 /**
@@ -62,6 +39,70 @@ export const setJwtHeader = (token: string, res: ServerResponse): void => {
 };
 
 /**
+ * Get user from the jwt cookie
+ * @async
+ * @param token - The jwt token
+ * @returns decoded user or null if invalid
+ */
+export const getUserFromToken = async (token: string): Promise<User | null> => {
+  let jwtPublicKey: string;
+  try {
+    const res = await axios.post(
+      `${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`,
+      {
+        query: "{ publicKey }",
+      }
+    );
+    jwtPublicKey = res.data.data.publicKey;
+  } catch {
+    return null;
+  }
+
+  if (!jwtPublicKey) {
+    return null;
+  }
+
+  try {
+    const user = <User>(
+      jwt.verify(token, jwtPublicKey, { algorithms: ["RS256"] })
+    );
+    return user;
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * Get the jwt token from the request
+ * @param req - The incoming HTTP request
+ * @returns the jwt token from the request
+ */
+const getJWTToken = (req: IncomingMessage): string | null => {
+  const cookies = parseCookies({ req });
+  const token =
+    process.env.NODE_ENV === "development"
+      ? cookies.jwt
+      : cookies["__Host-jwt"];
+  return token;
+};
+
+/**
+ * Get user from the request using the jwt cookie
+ * @async
+ * @param req - The incoming HTTP request
+ * @returns decoded user or null if invalid
+ */
+export const getUserFromRequest = async (
+  req: IncomingMessage
+): Promise<User | null> => {
+  const token = getJWTToken(req);
+  if (!token) {
+    return null;
+  }
+  return getUserFromToken(token);
+};
+
+/**
  * Get user through the cookie and update the token
  * @async
  * @param ctx - The server side props context
@@ -70,60 +111,22 @@ export const setJwtHeader = (token: string, res: ServerResponse): void => {
 export const getUserAndRefreshToken = async (
   ctx: GetServerSidePropsContext
 ): Promise<User | null> => {
-  const cookies = parseCookies(ctx);
-  const token =
-    process.env.NODE_ENV === "development"
-      ? cookies.jwt
-      : cookies["__Host-jwt"];
-  const jwtSecret = process.env.JWT_SECRET_KEY;
-  const addr = getClientIp(ctx.req);
-  if (!jwtSecret) {
-    return null;
-  }
+  const oldToken = getJWTToken(ctx.req);
   try {
-    const {
-      sid,
-      name,
-      addr: jwtAddr,
-    } = jwt.verify(token, jwtSecret) as Record<string, unknown>;
-    const user = { sid, name, addr: jwtAddr } as User;
-    if (addr !== user.addr) return null;
-
-    // issue new token whenever possible
-    const newToken = await issureJwt(user, jwtSecret);
-    if (newToken) {
-      setJwtHeader(newToken, ctx.res);
-    }
-
-    return user;
-  } catch {
-    return null;
-  }
-};
-
-/**
- * Get user from the request using the jwt cookie
- * @async
- * @param req - The incoming HTTP request
- * @returns decoded user or undefined if invalid
- */
-export const getUser = async (req: IncomingMessage): Promise<User | null> => {
-  const cookies = parseCookies({ req });
-  const token =
-    process.env.NODE_ENV === "development"
-      ? cookies.jwt
-      : cookies["__Host-jwt"];
-  const jwtSecret = process.env.JWT_SECRET_KEY;
-  if (!jwtSecret) {
-    return null;
-  }
-
-  const addr = getClientIp(req);
-  try {
-    const user = <User>jwt.verify(token, jwtSecret);
-    if (addr !== user.addr) return null;
-    return user;
-  } catch {
+    const result = await axios.post(
+      `${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`,
+      {
+        query: "mutation { refreshJWT }",
+      },
+      {
+        headers: { Cookie: `__Host-jwt=${oldToken}` },
+      }
+    );
+    const newToken = result.data.data.refreshJWT;
+    setJwtHeader(newToken, ctx.res);
+    return await getUserFromToken(newToken);
+  } catch (err) {
+    console.error(err);
     return null;
   }
 };

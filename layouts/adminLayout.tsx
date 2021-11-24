@@ -104,7 +104,7 @@ const AdminLayout: React.FunctionComponent<Props> = ({ children }: Props) => {
           </Navbar.Brand>
           <Navbar.Menu>
             <Navbar.Container></Navbar.Container>
-            <Navbar.Container position="end">
+            <Navbar.Container align="right">
               <Link href="/logout">
                 <a href="/logout" className="navbar-item">
                   Logout

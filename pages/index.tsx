@@ -1,28 +1,39 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { isAdmin, getUserAndRefreshToken } from "utils/auth";
 import IndexWrapper from "components/indexWrapper";
 import { Button } from "react-bulma-components";
+import getMicrosoftLoginLink from "utils/microsoftLogin";
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+interface Props {
+  baseUrl: string;
+  clientId?: string | undefined;
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const user = await getUserAndRefreshToken(ctx);
   if (user) {
     if (await isAdmin(user)) {
-      ctx.res.statusCode = 307;
-      ctx.res.setHeader("Location", "/admin");
-      return { props: { baseUrl: "", clientId: "" } };
+      return { redirect: { permanent: false, destination: "/admin" } };
     }
-    ctx.res.statusCode = 307;
-    ctx.res.setHeader("Location", "/member");
-    return { props: { baseUrl: "", clientId: "" } };
+    return { redirect: { permanent: false, destination: "/member" } };
   }
+  const { host = "" } = ctx.req.headers;
+  const protocol = /^localhost/g.test(host) ? "http" : "https";
+  const baseUrl = `${protocol}://${ctx.req.headers.host}`;
+  const clientId = process.env.CLIENT_ID;
   return {
-    props: {},
+    props: { baseUrl, ...(clientId && { clientId }) },
   };
 };
 
-function Index(): React.ReactElement {
+function Index({ baseUrl, clientId }: Props): React.ReactElement {
+  const link = useMemo(
+    () => (clientId ? getMicrosoftLoginLink({ baseUrl, clientId }) : ""),
+    [baseUrl, clientId]
+  );
+
   return (
     <IndexWrapper>
       <>
@@ -30,9 +41,15 @@ function Index(): React.ReactElement {
           <title>Welcome to Index</title>
         </Head>
         {<div className="mb-5">Hello</div>}
-        <Button color="link" size="medium">
-          This will be a login button
-        </Button>
+        {link ? (
+          <Button color="link" href={link} size="medium" renderAs="a">
+            Login with CUHK OnePass
+          </Button>
+        ) : (
+          <Button color="danger" size="medium">
+            Fail to generate login llink
+          </Button>
+        )}
       </>
     </IndexWrapper>
   );

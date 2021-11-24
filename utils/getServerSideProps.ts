@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import { getUserAndRefreshToken, isAdmin } from "utils/auth";
 
 export interface ServerSideProps {
-  user: User | null;
+  user: User;
   isAdmin: boolean;
 }
 

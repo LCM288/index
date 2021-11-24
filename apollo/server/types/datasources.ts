@@ -4,8 +4,6 @@ export interface User {
   sid: string;
   /** The English name of the user */
   name: string;
-  /** The remote address of the user's last login */
-  addr: string | null;
 }
 
 /** The base context for the apollo server */

@@ -31,11 +31,7 @@ export default class SeriesAPI extends DataSource<ContextBase> {
     return this.collectionRef
       .orderBy("createdAt")
       .get()
-      .then((snapshot) => {
-        const res: Series[] = [];
-        snapshot.forEach((doc) => res.push(doc.data()));
-        return res;
-      });
+      .then((snapshot) => snapshot.docs.map((doc) => doc.data()));
   }
 
   /**

@@ -15,7 +15,7 @@ const Index = ({ user, isAdmin }: ServerSideProps): React.ReactElement => {
         <Head>
           <title>Hello</title>
         </Head>
-        <div className="mb-5">Hello</div>
+        <div className="mb-5">Hello, {user.name}!</div>
         <Button.Group className="is-justify-content-center">
           {isAdmin && (
             <Link href="/admin">
