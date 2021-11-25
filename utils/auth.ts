@@ -8,17 +8,20 @@ import { post } from "utils/httpHelpers";
 /**
  * Check whether the user is an executive
  * @async
- * @param user - The user object to be checked
+ * @param token - The jwt token of the user
  * @returns whether the user is an executive
  */
-export const isAdmin = async (user: User | null): Promise<boolean> => {
-  if (!user) {
-    return false;
-  }
+export const isAdmin = async (token: string): Promise<boolean> => {
   try {
-    const res = await post(`${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`, {
-      query: "{ isAdmin }",
-    });
+    const res = await post(
+      `${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`,
+      {
+        query: "{ isAdmin }",
+      },
+      {
+        headers: { Cookie: `__Host-jwt=${token}` },
+      }
+    );
     return res.data.data.isAdmin;
   } catch (err) {
     console.error(err);
@@ -76,7 +79,7 @@ export const getUserFromToken = async (token: string): Promise<User | null> => {
  * @param req - The incoming HTTP request
  * @returns the jwt token from the request
  */
-const getJWTToken = (req: IncomingMessage): string | null => {
+export const getJWTToken = (req: IncomingMessage): string | null => {
   const cookies = parseCookies({ req });
   const token =
     process.env.NODE_ENV === "development"

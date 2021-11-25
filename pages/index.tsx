@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-import { isAdmin, getUserAndRefreshToken } from "utils/auth";
+import { isAdmin, getJWTToken } from "utils/auth";
 import IndexWrapper from "components/indexWrapper";
 import { Button } from "react-bulma-components";
 import getMicrosoftLoginLink from "utils/microsoftLogin";
@@ -12,9 +12,9 @@ interface Props {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-  const user = await getUserAndRefreshToken(ctx);
-  if (user) {
-    if (await isAdmin(user)) {
+  const token = getJWTToken(ctx.req);
+  if (token) {
+    if (await isAdmin(token)) {
       return { redirect: { permanent: false, destination: "/admin" } };
     }
     return { redirect: { permanent: false, destination: "/member" } };
