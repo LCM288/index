@@ -124,7 +124,8 @@ export const getUserAndRefreshToken = async (
     );
     const newToken = result.data.data.refreshJWT;
     setJwtHeader(newToken, ctx.res);
-    return await getUserFromToken(newToken);
+    // since we recieved the token from soc admin directly, skip verifying to save bandwidth
+    return jwt.decode(newToken) as User;
   } catch (err) {
     console.error(err);
     return null;
