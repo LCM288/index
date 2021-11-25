@@ -3,7 +3,7 @@ import { IncomingMessage, ServerResponse } from "http";
 import { parseCookies } from "nookies";
 import jwt from "jsonwebtoken";
 import { User } from "@/types/datasources";
-import axios from "axios";
+import { post } from "utils/httpHelpers";
 
 // TODO
 /**
@@ -45,24 +45,16 @@ export const setJwtHeader = (token: string, res: ServerResponse): void => {
  * @returns decoded user or null if invalid
  */
 export const getUserFromToken = async (token: string): Promise<User | null> => {
-  let jwtPublicKey: string;
   try {
-    const res = await axios.post(
-      `${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`,
-      {
-        query: "{ publicKey }",
-      }
-    );
-    jwtPublicKey = res.data.data.publicKey;
-  } catch {
-    return null;
-  }
+    const res = await post(`${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`, {
+      query: "{ publicKey }",
+    });
+    const jwtPublicKey = res.data.data.publicKey;
 
-  if (!jwtPublicKey) {
-    return null;
-  }
+    if (!jwtPublicKey) {
+      return null;
+    }
 
-  try {
     const user = <User>(
       jwt.verify(token, jwtPublicKey, { algorithms: ["RS256"] })
     );
@@ -111,9 +103,9 @@ export const getUserFromRequest = async (
 export const getUserAndRefreshToken = async (
   ctx: GetServerSidePropsContext
 ): Promise<User | null> => {
-  const oldToken = getJWTToken(ctx.req);
   try {
-    const result = await axios.post(
+    const oldToken = getJWTToken(ctx.req);
+    const result = await post(
       `${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`,
       {
         query: "mutation { refreshJWT }",

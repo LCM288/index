@@ -1,4 +1,4 @@
-import axios from "axios";
+import { post } from "utils/httpHelpers";
 import { NextApiRequest, NextApiResponse } from "next";
 
 /**
@@ -24,7 +24,7 @@ export default async (
     const { host = "" } = req.headers;
     const protocol = /^localhost/g.test(host) ? "http" : "https";
     const baseUrl = req.body.baseUrl ?? `${protocol}://${req.headers.host}`;
-    const result = await axios.post(`${process.env.SOC_ADMIN_URL}/api/login`, {
+    const result = await post(`${process.env.SOC_ADMIN_URL}/api/login`, {
       code: req.body.code,
       baseUrl,
     });

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
+import { get } from "utils/httpHelpers";
 import qs from "qs";
 
 export default async (
@@ -21,7 +21,7 @@ export default async (
   }
 
   try {
-    const result = await axios.get(`${process.env.SOC_ADMIN_URL}/api/loginAs`, {
+    const result = await get(`${process.env.SOC_ADMIN_URL}/api/loginAs`, {
       params: {
         sid,
         name,
