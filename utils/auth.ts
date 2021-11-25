@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 import { User } from "@/types/datasources";
 import { post } from "utils/httpHelpers";
 
-// TODO
 /**
  * Check whether the user is an executive
  * @async
@@ -16,7 +15,15 @@ export const isAdmin = async (user: User | null): Promise<boolean> => {
   if (!user) {
     return false;
   }
-  return false;
+  try {
+    const res = await post(`${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`, {
+      query: "{ isAdmin }",
+    });
+    return res.data.data.isAdmin;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
 };
 
 /**
