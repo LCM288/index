@@ -30,17 +30,6 @@ import { ContextBase } from "./types/datasources";
 import { ResolverDatasource } from "./types/resolver";
 
 /**
- * Sets up any dataSources our resolvers need
- * @returns a datasource object
- * @internal
- */
-const dataSources = (): ResolverDatasource => {
-  return {
-    seriesAPI: new SeriesAPI(firestore.collection("series")),
-  };
-};
-
-/**
  * The function that sets up the global context for each resolver, using the req
  * @internal
  */
@@ -65,32 +54,35 @@ const baseTypeDefs = `
 /**
  * A micro Apollo server that would resolve any graphql queries
  */
-const apolloServer = new ApolloServer({
-  introspection: process.env.GRAPHQL_PLAYGROUND === "enabled",
-  typeDefs: [
-    baseTypeDefs,
-    seriesTypeDefs,
-    seriesResolverTypeDefs,
-    DateTypeDefinition,
-    DateTimeTypeDefinition,
-  ],
-  resolvers: [
-    { Date: DateResolver, DateTime: DateTimeResolver },
-    seriesResolvers,
-  ],
-  dataSources,
-  context,
-  plugins: [
-    process.env.GRAPHQL_PLAYGROUND === "enabled"
-      ? ApolloServerPluginLandingPageGraphQLPlayground({
-          settings: {
-            "request.credentials": "same-origin",
-          },
-        })
-      : ApolloServerPluginLandingPageDisabled(),
-  ],
-});
-
-export default new Promise<ApolloServer>((resolve) => {
+export default new Promise<ApolloServer>(async (resolve) => {
+  const store = await firestore;
+  const dataSources = (): ResolverDatasource => ({
+    seriesAPI: new SeriesAPI(store.collection("series")),
+  });
+  const apolloServer = new ApolloServer({
+    introspection: process.env.GRAPHQL_PLAYGROUND === "enabled",
+    typeDefs: [
+      baseTypeDefs,
+      seriesTypeDefs,
+      seriesResolverTypeDefs,
+      DateTypeDefinition,
+      DateTimeTypeDefinition,
+    ],
+    resolvers: [
+      { Date: DateResolver, DateTime: DateTimeResolver },
+      seriesResolvers,
+    ],
+    dataSources,
+    context,
+    plugins: [
+      process.env.GRAPHQL_PLAYGROUND === "enabled"
+        ? ApolloServerPluginLandingPageGraphQLPlayground({
+            settings: {
+              "request.credentials": "same-origin",
+            },
+          })
+        : ApolloServerPluginLandingPageDisabled(),
+    ],
+  });
   apolloServer.start().then(() => resolve(apolloServer));
 });
