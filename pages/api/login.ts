@@ -1,5 +1,6 @@
 import { post } from "utils/httpHelpers";
 import { NextApiRequest, NextApiResponse } from "next";
+import { firestore } from "@/store";
 
 /**
  * The handler that handles the login
@@ -24,10 +25,19 @@ export default async (
     const { host = "" } = req.headers;
     const protocol = /^localhost/g.test(host) ? "http" : "https";
     const baseUrl = req.body.baseUrl ?? `${protocol}://${req.headers.host}`;
+    const getPublicKey = post(
+      `${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`,
+      {
+        query: "{ publicKey }",
+      }
+    ).then(({ data }) =>
+      firestore.collection("keys").doc("socAdmin").set(data.data)
+    );
     const result = await post(`${process.env.SOC_ADMIN_URL}/api/login`, {
       code: req.body.code,
       baseUrl,
     });
+    await getPublicKey;
     const setCookieHeader = result.headers["set-cookie"]?.[0];
     if (!setCookieHeader) {
       throw new Error(`Did not recieved jwt cookie`);

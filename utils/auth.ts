@@ -4,6 +4,7 @@ import { parseCookies } from "nookies";
 import jwt from "jsonwebtoken";
 import { User } from "@/types/datasources";
 import { post } from "utils/httpHelpers";
+import { firestore } from "@/store";
 
 /**
  * Check whether the user is an executive
@@ -11,22 +12,8 @@ import { post } from "utils/httpHelpers";
  * @param token - The jwt token of the user
  * @returns whether the user is an executive
  */
-export const isAdmin = async (token: string): Promise<boolean> => {
-  try {
-    const res = await post(
-      `${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`,
-      {
-        query: "{ isAdmin }",
-      },
-      {
-        headers: { Cookie: `__Host-jwt=${token}` },
-      }
-    );
-    return res.data.data.isAdmin;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
+export const isAdmin = (user: User): boolean => {
+  return user.isAdmin;
 };
 
 /**
@@ -56,10 +43,15 @@ export const setJwtHeader = (token: string, res: ServerResponse): void => {
  */
 export const getUserFromToken = async (token: string): Promise<User | null> => {
   try {
-    const res = await post(`${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`, {
-      query: "{ publicKey }",
-    });
-    const jwtPublicKey = res.data.data.publicKey;
+    const socAdminDoc = await firestore
+      .collection("keys")
+      .doc("socAdmin")
+      .get();
+    if (!socAdminDoc.exists) {
+      console.error("socAdmin document not found");
+      return null;
+    }
+    const jwtPublicKey = socAdminDoc.data()?.publicKey;
 
     if (!jwtPublicKey) {
       return null;

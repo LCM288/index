@@ -4,6 +4,8 @@ export interface User {
   sid: string;
   /** The English name of the user */
   name: string;
+  /** Whether the user is an admin */
+  isAdmin: boolean;
 }
 
 /** The base context for the apollo server */
