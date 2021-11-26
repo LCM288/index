@@ -4,8 +4,16 @@ import "styles/select-fix.css";
 import "styles/toast-fix.css";
 import "styles/modal-overflowing.css";
 import "react-day-picker/lib/style.css";
+import { DateTime } from "luxon";
 import { AppProps } from "next/app";
-import React, { useRef, useCallback, useEffect } from "react";
+import React, {
+  useRef,
+  useCallback,
+  useEffect,
+  useState,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { ToastContainer } from "react-toastify";
 import {
   ApolloClient,
@@ -30,6 +38,10 @@ export const ClipCountContext = React.createContext({
   add: () => {},
   remove: () => {},
 });
+
+export const TimerContext = React.createContext<
+  [DateTime, Dispatch<SetStateAction<DateTime>>]
+>([DateTime.invalid("Not initialized"), () => {}]);
 
 function App({ Component, pageProps }: AppProps): React.ReactElement {
   const Layout =
@@ -59,6 +71,8 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
     document.documentElement.lang = "en";
   });
 
+  const [timer, setTimer] = useState(DateTime.invalid("Not initialized"));
+
   return (
     <>
       <ApolloProvider client={client}>
@@ -68,9 +82,11 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
             remove: removeClipCount,
           }}
         >
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <TimerContext.Provider value={[timer, setTimer]}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </TimerContext.Provider>
         </ClipCountContext.Provider>
       </ApolloProvider>
       <ToastContainer closeButton={BulmaCloseBtn} />

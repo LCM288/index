@@ -1,10 +1,9 @@
 import { User } from "@/types/datasources";
 import { GetServerSideProps } from "next";
-import { getUserAndRefreshToken, isAdmin } from "utils/auth";
+import { getUserAndRefreshToken } from "utils/auth";
 
 export interface ServerSideProps {
   user: User;
-  isAdmin: boolean;
 }
 
 export const getMemberPageServerSideProps: GetServerSideProps<ServerSideProps> =
@@ -19,7 +18,7 @@ export const getMemberPageServerSideProps: GetServerSideProps<ServerSideProps> =
       };
     }
     return {
-      props: { user, isAdmin: isAdmin(user) }, // will be passed to the page component as props
+      props: { user }, // will be passed to the page component as props
     };
   };
 
@@ -33,7 +32,7 @@ export const getAdminPageServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
-  if (!isAdmin(user)) {
+  if (!user.isAdmin) {
     return {
       redirect: {
         permanent: false,
@@ -41,5 +40,5 @@ export const getAdminPageServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
-  return { props: { user, isAdmin: true } };
+  return { props: { user } };
 };

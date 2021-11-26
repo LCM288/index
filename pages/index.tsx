@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
-import { isAdmin, getUserFromRequest } from "utils/auth";
+import { getUserFromRequest } from "utils/auth";
 import IndexWrapper from "components/indexWrapper";
 import { Button } from "react-bulma-components";
 import getMicrosoftLoginLink from "utils/microsoftLogin";
@@ -14,7 +14,7 @@ interface Props {
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const user = await getUserFromRequest(ctx.req);
   if (user) {
-    if (isAdmin(user)) {
+    if (user.isAdmin) {
       return { redirect: { permanent: false, destination: "/admin" } };
     }
     return { redirect: { permanent: false, destination: "/member" } };

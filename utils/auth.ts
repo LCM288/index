@@ -5,16 +5,7 @@ import jwt from "jsonwebtoken";
 import { User } from "@/types/datasources";
 import { post } from "utils/httpHelpers";
 import { firestore } from "@/store";
-
-/**
- * Check whether the user is an executive
- * @async
- * @param token - The jwt token of the user
- * @returns whether the user is an executive
- */
-export const isAdmin = (user: User): boolean => {
-  return user.isAdmin;
-};
+import { DateTime } from "luxon";
 
 /**
  * Set the response header to set cookie for jwt token
@@ -105,8 +96,21 @@ export const getUserFromRequest = async (
 export const getUserAndRefreshToken = async (
   ctx: GetServerSidePropsContext
 ): Promise<User | null> => {
+  const oldToken = getJWTToken(ctx.req);
+  if (!oldToken) {
+    return null;
+  }
+  const oldUser = await getUserFromToken(oldToken);
+  if (!oldUser) {
+    return null;
+  }
+  if (
+    DateTime.fromMillis(oldUser.exp * 1000) >
+    DateTime.local().plus({ minutes: 15 })
+  ) {
+    return getUserFromToken(oldToken);
+  }
   try {
-    const oldToken = getJWTToken(ctx.req);
     const result = await post(
       `${process.env.SOC_ADMIN_URL ?? ""}/api/graphql`,
       {

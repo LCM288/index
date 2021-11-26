@@ -3,8 +3,8 @@ import { Navbar } from "react-bulma-components";
 import Link from "next/link";
 import LogoutTimer from "components/logoutTimer";
 import LogoutReminderModal from "components/logoutReminderModal";
-import { DateTime } from "luxon";
 import useClipped from "utils/useClipped";
+import { useLogoutTimer } from "utils/useTimerState";
 
 interface Props {
   children: React.ReactElement;
@@ -12,13 +12,9 @@ interface Props {
 
 const MemberLayout: React.FunctionComponent<Props> = ({ children }: Props) => {
   const navBarRef = useRef<HTMLDivElement | null>(null);
-  const oldChildren = useRef(children);
   const [isActive, setActive] = useState(false);
-  const [logoutTime, setLogoutTime] = useState(
-    DateTime.local().plus({ minutes: 30 })
-  );
+  const logoutTime = useLogoutTimer();
   const [openModal, setOpenModal] = useState(false);
-  // const { data, loading, error } = useQuery(socNameQuery);
 
   const toggleActive = useCallback(() => {
     setActive(!isActive);
@@ -58,11 +54,6 @@ const MemberLayout: React.FunctionComponent<Props> = ({ children }: Props) => {
     return () => {};
   }, [logoutTime, setOpenModal, openModal]);
   useClipped(openModal);
-
-  if (oldChildren.current !== children) {
-    setLogoutTime(DateTime.local().plus({ minutes: 30 }));
-    oldChildren.current = children;
-  }
 
   return (
     <div>

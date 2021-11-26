@@ -5,10 +5,12 @@ import { Button } from "react-bulma-components";
 import { ServerSideProps } from "utils/getServerSideProps";
 import MemberLayout from "layouts/memberLayout";
 import IndexWrapper from "components/indexWrapper";
+import { useSetLogoutTimer } from "utils/useTimerState";
 
 export { getMemberPageServerSideProps as getServerSideProps } from "utils/getServerSideProps";
 
-const Index = ({ user, isAdmin }: ServerSideProps): React.ReactElement => {
+const Index = ({ user }: ServerSideProps): React.ReactElement => {
+  useSetLogoutTimer(user.exp);
   return (
     <IndexWrapper>
       <>
@@ -17,7 +19,7 @@ const Index = ({ user, isAdmin }: ServerSideProps): React.ReactElement => {
         </Head>
         <div className="mb-5">Hello, {user.name}!</div>
         <Button.Group className="is-justify-content-center">
-          {isAdmin && (
+          {user.isAdmin && (
             <Link href="/admin">
               <a href="/admin" className="button is-info">
                 Admin Portal
