@@ -108,7 +108,7 @@ export const getUserAndRefreshToken = async (
     DateTime.fromMillis(oldUser.exp * 1000) >
     DateTime.local().plus({ minutes: 15 })
   ) {
-    return getUserFromToken(oldToken);
+    return oldUser;
   }
   try {
     const result = await post(
