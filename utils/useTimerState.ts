@@ -2,17 +2,24 @@ import { DateTime } from "luxon";
 import { useContext, useMemo, useEffect } from "react";
 import { TimerContext } from "pages/_app";
 
-export const useLogoutTimer = (): DateTime => {
-  const [timer] = useContext(TimerContext);
-  return timer;
+export const useLogoutTime = (): DateTime => {
+  const { get: getLogoutTime } = useContext(TimerContext);
+  return getLogoutTime();
 };
 
-export const useSetLogoutTimer = (exp: number): void => {
-  const [logoutTime, setLogoutTime] = useContext(TimerContext);
-  const curLogoutTime = useMemo(() => DateTime.fromMillis(exp * 1000), [exp]);
+export const useSetLogoutTime = (exp: number): void => {
+  const { get: getLogoutTime, set: setLogoutTime } = useContext(TimerContext);
+  const logoutTime = getLogoutTime();
+  const newLogoutTime = useMemo(
+    () =>
+      exp === -1
+        ? DateTime.invalid("Invalid timestamp")
+        : DateTime.fromMillis(exp * 1000),
+    [exp]
+  );
   useEffect(() => {
-    if (logoutTime !== curLogoutTime) {
-      setLogoutTime(curLogoutTime);
+    if (logoutTime !== newLogoutTime) {
+      setLogoutTime(newLogoutTime);
     }
-  }, [logoutTime, setLogoutTime, curLogoutTime]);
+  }, [logoutTime, setLogoutTime, newLogoutTime]);
 };

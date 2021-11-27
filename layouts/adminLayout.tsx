@@ -4,7 +4,7 @@ import Link from "next/link";
 import LogoutTimer from "components/logoutTimer";
 import LogoutReminderModal from "components/logoutReminderModal";
 import useClipped from "utils/useClipped";
-import { useLogoutTimer } from "utils/useTimerState";
+import { useLogoutTime } from "utils/useTimerState";
 
 interface Props {
   children: React.ReactElement;
@@ -13,7 +13,7 @@ interface Props {
 const AdminLayout: React.FunctionComponent<Props> = ({ children }: Props) => {
   const navBarRef = useRef<HTMLDivElement | null>(null);
   const [isActive, setActive] = useState(false);
-  const logoutTime = useLogoutTimer();
+  const logoutTime = useLogoutTime();
   const [openModal, setOpenModal] = useState(false);
 
   const toggleActive = useCallback(() => {

@@ -4,12 +4,10 @@ import Link from "next/link";
 import Head from "next/head";
 import IndexWrapper from "components/indexWrapper";
 import { ServerSideProps } from "utils/getServerSideProps";
-import { useSetLogoutTimer } from "utils/useTimerState";
 
 export { getAdminPageServerSideProps as getServerSideProps } from "utils/getServerSideProps";
 
 const Index = ({ user }: ServerSideProps): React.ReactElement => {
-  useSetLogoutTimer(user.exp);
   return (
     <IndexWrapper>
       <>

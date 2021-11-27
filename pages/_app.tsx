@@ -21,6 +21,7 @@ import {
   NormalizedCacheObject,
   ApolloProvider,
 } from "@apollo/client";
+import SetLogoutTime from "components/setLogoutTime";
 
 const BulmaCloseBtn = ({
   closeToast,
@@ -39,9 +40,10 @@ export const ClipCountContext = React.createContext({
   remove: () => {},
 });
 
-export const TimerContext = React.createContext<
-  [DateTime, Dispatch<SetStateAction<DateTime>>]
->([DateTime.invalid("Not initialized"), () => {}]);
+export const TimerContext = React.createContext<{
+  get: () => DateTime;
+  set: Dispatch<SetStateAction<DateTime>>;
+}>({ get: () => DateTime.invalid("Not initialized"), set: () => {} });
 
 function App({ Component, pageProps }: AppProps): React.ReactElement {
   const Layout =
@@ -82,10 +84,11 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
             remove: removeClipCount,
           }}
         >
-          <TimerContext.Provider value={[timer, setTimer]}>
+          <TimerContext.Provider value={{ get: () => timer, set: setTimer }}>
             <Layout>
               <Component {...pageProps} />
             </Layout>
+            <SetLogoutTime {...pageProps} />
           </TimerContext.Provider>
         </ClipCountContext.Provider>
       </ApolloProvider>

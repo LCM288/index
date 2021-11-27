@@ -5,12 +5,10 @@ import { Button } from "react-bulma-components";
 import { ServerSideProps } from "utils/getServerSideProps";
 import MemberLayout from "layouts/memberLayout";
 import IndexWrapper from "components/indexWrapper";
-import { useSetLogoutTimer } from "utils/useTimerState";
 
 export { getMemberPageServerSideProps as getServerSideProps } from "utils/getServerSideProps";
 
 const Index = ({ user }: ServerSideProps): React.ReactElement => {
-  useSetLogoutTimer(user.exp);
   return (
     <IndexWrapper>
       <>
