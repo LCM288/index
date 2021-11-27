@@ -1,8 +1,3 @@
-/**
- * @packageDocumentation
- * @module Series
- */
-
 import { DataSource } from "apollo-datasource";
 import {
   Series,

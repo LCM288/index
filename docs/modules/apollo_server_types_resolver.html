@@ -73,13 +73,12 @@
 							<h3>Interfaces</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/apollo_server_types_resolver.ResolverContext.html" class="tsd-kind-icon">Resolver<wbr>Context</a></li>
+								<li class="tsd-kind-interface tsd-parent-kind-module"><a href="../interfaces/apollo_server_types_resolver.ResolverDatasource.html" class="tsd-kind-icon">Resolver<wbr>Datasource</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Type aliases</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="apollo_server_types_resolver.html#ResolverDatasource" class="tsd-kind-icon">Resolver<wbr>Datasource</a></li>
-								<li class="tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter"><a href="apollo_server_types_resolver.html#ResolverFn" class="tsd-kind-icon">Resolver<wbr>Fn</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="apollo_server_types_resolver.html#ResolverParent" class="tsd-kind-icon">Resolver<wbr>Parent</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="apollo_server_types_resolver.html#Resolvers" class="tsd-kind-icon">Resolvers</a></li>
 							</ul>
@@ -90,78 +89,12 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Type aliases</h2>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
-					<a name="ResolverDatasource" class="tsd-anchor"></a>
-					<h3>Resolver<wbr>Datasource</h3>
-					<div class="tsd-signature tsd-kind-icon">Resolver<wbr>Datasource<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">DataSources</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/apollo_server_types_datasources.ContextBase.html" class="tsd-signature-type" data-tsd-kind="Interface">ContextBase</a><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/LCM288/index/blob/6106ae7/apollo/server/types/resolver.ts#L6">apollo/server/types/resolver.ts:6</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The data source for a resolver</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
-					<a name="ResolverFn" class="tsd-anchor"></a>
-					<h3>Resolver<wbr>Fn</h3>
-					<div class="tsd-signature tsd-kind-icon">Resolver<wbr>Fn&lt;Args, Result&gt;<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>parent<span class="tsd-signature-symbol">: </span><a href="apollo_server_types_resolver.html#ResolverParent" class="tsd-signature-type" data-tsd-kind="Type alias">ResolverParent</a>, args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Args</span>, context<span class="tsd-signature-symbol">: </span><a href="../interfaces/apollo_server_types_resolver.ResolverContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ResolverContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Result</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Result</span><span class="tsd-signature-symbol">&gt;</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/LCM288/index/blob/6106ae7/apollo/server/types/resolver.ts#L21">apollo/server/types/resolver.ts:21</a></li>
-						</ul>
-					</aside>
-					<h4 class="tsd-type-parameters-title">Type parameters</h4>
-					<ul class="tsd-type-parameters">
-						<li>
-							<h4>Args</h4>
-						</li>
-						<li>
-							<h4>Result</h4>
-						</li>
-					</ul>
-					<div class="tsd-type-declaration">
-						<h4>Type declaration</h4>
-						<ul class="tsd-parameters">
-							<li class="tsd-parameter-signature">
-								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>parent<span class="tsd-signature-symbol">: </span><a href="apollo_server_types_resolver.html#ResolverParent" class="tsd-signature-type" data-tsd-kind="Type alias">ResolverParent</a>, args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Args</span>, context<span class="tsd-signature-symbol">: </span><a href="../interfaces/apollo_server_types_resolver.ResolverContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ResolverContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Result</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Result</span><span class="tsd-signature-symbol">&gt;</span></li>
-								</ul>
-								<ul class="tsd-descriptions">
-									<li class="tsd-description">
-										<div class="tsd-comment tsd-typography">
-											<div class="lead">
-												<p>The type of a resolver</p>
-											</div>
-										</div>
-										<h4 class="tsd-parameters-title">Parameters</h4>
-										<ul class="tsd-parameters">
-											<li>
-												<h5>parent: <a href="apollo_server_types_resolver.html#ResolverParent" class="tsd-signature-type" data-tsd-kind="Type alias">ResolverParent</a></h5>
-											</li>
-											<li>
-												<h5>args: <span class="tsd-signature-type">Args</span></h5>
-											</li>
-											<li>
-												<h5>context: <a href="../interfaces/apollo_server_types_resolver.ResolverContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ResolverContext</a></h5>
-											</li>
-										</ul>
-										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Result</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Result</span><span class="tsd-signature-symbol">&gt;</span></h4>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
 					<a name="ResolverParent" class="tsd-anchor"></a>
 					<h3>Resolver<wbr>Parent</h3>
 					<div class="tsd-signature tsd-kind-icon">Resolver<wbr>Parent<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCM288/index/blob/6106ae7/apollo/server/types/resolver.ts#L9">apollo/server/types/resolver.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/LCM288/index/blob/a3b9436/apollo/server/types/resolver.ts#L12">apollo/server/types/resolver.ts:12</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -176,7 +109,7 @@
 					<div class="tsd-signature tsd-kind-icon">Resolvers<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IResolvers</span><span class="tsd-signature-symbol">&lt;</span><a href="apollo_server_types_resolver.html#ResolverParent" class="tsd-signature-type" data-tsd-kind="Type alias">ResolverParent</a><span class="tsd-signature-symbol">, </span><a href="../interfaces/apollo_server_types_resolver.ResolverContext.html" class="tsd-signature-type" data-tsd-kind="Interface">ResolverContext</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/LCM288/index/blob/6106ae7/apollo/server/types/resolver.ts#L28">apollo/server/types/resolver.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/LCM288/index/blob/a3b9436/apollo/server/types/resolver.ts#L21">apollo/server/types/resolver.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -203,11 +136,8 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="../interfaces/apollo_server_types_resolver.ResolverContext.html" class="tsd-kind-icon">Resolver<wbr>Context</a>
 					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
-						<a href="apollo_server_types_resolver.html#ResolverDatasource" class="tsd-kind-icon">Resolver<wbr>Datasource</a>
-					</li>
-					<li class=" tsd-kind-type-alias tsd-parent-kind-module tsd-has-type-parameter">
-						<a href="apollo_server_types_resolver.html#ResolverFn" class="tsd-kind-icon">Resolver<wbr>Fn</a>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/apollo_server_types_resolver.ResolverDatasource.html" class="tsd-kind-icon">Resolver<wbr>Datasource</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="apollo_server_types_resolver.html#ResolverParent" class="tsd-kind-icon">Resolver<wbr>Parent</a>
@@ -228,11 +158,16 @@
 				<li class="tsd-kind-namespace"><span class="tsd-kind-icon">Namespace</span></li>
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
 				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 			</ul>
 		</div>
 	</div>

@@ -1,8 +1,3 @@
-/**
- * @packageDocumentation
- * @module Series
- */
-
 import { Resolvers, ResolverContext } from "@/types/resolver";
 import {
   QueryResolvers,
