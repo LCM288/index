@@ -6,6 +6,7 @@ import "styles/modal-overflowing.css";
 import "react-day-picker/lib/style.css";
 import { DateTime } from "luxon";
 import { AppProps } from "next/app";
+import { useRouter } from "next/router";
 import React, {
   useRef,
   useCallback,
@@ -22,6 +23,7 @@ import {
   ApolloProvider,
 } from "@apollo/client";
 import SetLogoutTime from "components/setLogoutTime";
+import Loading from "components/loading";
 
 const BulmaCloseBtn = ({
   closeToast,
@@ -75,6 +77,28 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
 
   const [timer, setTimer] = useState(DateTime.invalid("Not initialized"));
 
+  const router = useRouter();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const timeoutId = useRef(0);
+  React.useEffect(() => {
+    const onEnd = () => {
+      if (timeoutId.current) {
+        window.clearTimeout(timeoutId.current);
+        timeoutId.current = 0;
+      }
+      setLoading(false);
+    };
+
+    router.events.on("routeChangeStart", () => {
+      if (!timeoutId.current) {
+        timeoutId.current = window.setTimeout(() => setLoading(true), 150);
+      }
+    });
+    router.events.on("routeChangeComplete", onEnd);
+    router.events.on("routeChangeError", onEnd);
+  }, [router]);
+
   return (
     <>
       <ApolloProvider client={client}>
@@ -87,6 +111,7 @@ function App({ Component, pageProps }: AppProps): React.ReactElement {
           <TimerContext.Provider value={{ get: () => timer, set: setTimer }}>
             <Layout>
               <Component {...pageProps} />
+              <Loading loading={loading} />
             </Layout>
             <SetLogoutTime {...pageProps} />
           </TimerContext.Provider>
