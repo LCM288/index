@@ -3,41 +3,28 @@
  * @module Series
  */
 
-import { ResolverFn, Resolvers } from "@/types/resolver";
-import { Series } from "@/models/series";
-import { v4 as uuidv4 } from "uuid";
-import { Timestamp } from "firebase-admin/firestore";
-
-type CreateSeriesArg = {
-  title: string;
-};
-
-/** The response when mutating a single series */
-interface SeriesUpdateResponse {
-  /** Whether the mutation is successful */
-  success: boolean;
-  /** Additional information about the mutation */
-  message: string;
-  /** The new series' attributes */
-  series?: Series;
-}
+import { Resolvers, ResolverContext } from "@/types/resolver";
+import {
+  QueryResolvers,
+  MutationResolvers,
+  SeriesUpdateResponse,
+  Series,
+} from "@/types/graphqlTypes.generated";
 
 // Query resolvers
 
+// TODO
 /**
  * The resolver for seriesList Query
  * @async
  * @returns All the executives
  * @category Query Resolver
  */
-const seriesListResolver: ResolverFn<null, Series[]> = async (
-  _,
-  __,
-  { dataSources }
-): Promise<Series[]> => {
-  const seriesList = await dataSources.seriesAPI.findSome();
-  return seriesList;
-};
+const seriesListResolver: QueryResolvers<ResolverContext>["seriesList"] =
+  async (_, __, { dataSources }): Promise<Series[]> => {
+    const seriesList = await dataSources.seriesAPI.findSome();
+    return seriesList;
+  };
 
 // Mutation resolvers
 
@@ -47,25 +34,32 @@ const seriesListResolver: ResolverFn<null, Series[]> = async (
  * @returns All the executives
  * @category Query Resolver
  */
-const createSeriesResolver: ResolverFn<CreateSeriesArg, SeriesUpdateResponse> =
+const createSeriesResolver: MutationResolvers<ResolverContext>["createSeries"] =
   async (_, arg, { dataSources }): Promise<SeriesUpdateResponse> => {
-    const newSeries = await dataSources.seriesAPI.create({
-      ...arg,
-      id: uuidv4(),
-      author: "unknown",
-      location: "unknown",
-      language: "unknown",
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    });
-    return {
-      success: true,
-      message: "Series created successfully",
-      series: newSeries,
-    };
+    try {
+      const newSeries = await dataSources.seriesAPI.create(arg);
+      return {
+        success: true,
+        message: `Series ${arg.title} is created successfully`,
+        series: newSeries,
+      };
+    } catch (err) {
+      console.error(err);
+      if (err instanceof Error) {
+        return {
+          success: false,
+          message: err.message,
+        };
+      } else {
+        return {
+          success: false,
+          message: "Unknown error",
+        };
+      }
+    }
   };
 
-/** The resolvers associated with the Executive model */
+/** The resolvers associated with the Series model */
 export const resolvers: Resolvers = {
   Query: {
     /** see {@link seriesListResolver} */
@@ -87,7 +81,12 @@ export const resolverTypeDefs = `
   }
 
   extend type Mutation {
-    createSeries(title: String!): SeriesUpdateResponse!
+    createSeries(
+      title: String!
+      author: String!
+      location: String!
+      language: String!
+    ): SeriesUpdateResponse!
   }
 
   type SeriesUpdateResponse {

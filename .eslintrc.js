@@ -26,7 +26,7 @@ module.exports = {
     sourceType: "module",
     project: "./tsconfig.json",
   },
-  ignorePatterns: ["docs"],
+  ignorePatterns: ["docs", "**/*.generated.ts"],
   rules: {
     "linebreak-style": "off",
     "prettier/prettier": [

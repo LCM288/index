@@ -4,7 +4,13 @@
  */
 
 import { DataSource } from "apollo-datasource";
-import { Series } from "@/models/series";
+import {
+  Series,
+  SeriesUpdateAttributes,
+  SeriesCreateAttributes,
+} from "@/models/series";
+import { v4 as uuidv4 } from "uuid";
+import { Timestamp } from "firebase-admin/firestore";
 import { ContextBase } from "@/types/datasources";
 import { CollectionReference } from "firebase-admin/firestore";
 
@@ -40,9 +46,17 @@ export default class SeriesAPI extends DataSource<ContextBase> {
    * @param series - The new series
    * @returns An object of the new series
    */
-  public async create(series: Series): Promise<Series | undefined> {
-    const newDocRef = this.collectionRef.doc(series.id);
-    await newDocRef.create(series);
+  public async create(
+    series: SeriesCreateAttributes
+  ): Promise<Series | undefined> {
+    const newId = uuidv4();
+    const newDocRef = this.collectionRef.doc(newId);
+    await newDocRef.create({
+      ...series,
+      id: newId,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
     return newDocRef.get().then((snapshot) => snapshot.data());
   }
 }

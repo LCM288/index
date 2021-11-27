@@ -10,12 +10,7 @@ import { getUserFromRequest } from "utils/auth";
 import { typeDefs as seriesTypeDefs } from "@/models/series";
 
 // resolvers
-import {
-  DateResolver,
-  DateTypeDefinition,
-  DateTimeResolver,
-  DateTimeTypeDefinition,
-} from "graphql-scalars";
+import { scalarTypeDefs, scalarResolvers } from "@/resolvers/scalars";
 import {
   resolvers as seriesResolvers,
   resolverTypeDefs as seriesResolverTypeDefs,
@@ -71,13 +66,9 @@ const apolloServer = new ApolloServer({
     baseTypeDefs,
     seriesTypeDefs,
     seriesResolverTypeDefs,
-    DateTypeDefinition,
-    DateTimeTypeDefinition,
+    scalarTypeDefs,
   ],
-  resolvers: [
-    { Date: DateResolver, DateTime: DateTimeResolver },
-    seriesResolvers,
-  ],
+  resolvers: [scalarResolvers, seriesResolvers],
   dataSources,
   context,
   plugins: [
